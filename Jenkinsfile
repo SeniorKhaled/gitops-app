@@ -48,17 +48,15 @@ pipeline {
                     sh """
                         rm -rf gitops-config
                         git clone https://${GIT_USER}:${GIT_PASS}@github.com/SeniorKhaled/gitops-config.git
-                        cd gitops-config
-                        sed -i 's|image: seniorkhaled/gitops-app:.*|image: seniorkhaled/gitops-app:${IMAGE_TAG}|g' deployment.yaml
-                        git config user.email "jenkins@gitops.com"
-                        git config user.name "Jenkins"
-                        git add deployment.yaml
-                        git commit -m "Update image tag to ${IMAGE_TAG}"
-                        git push
+                        sed -i 's|image: seniorkhaled/gitops-app:.*|image: seniorkhaled/gitops-app:${IMAGE_TAG}|g' gitops-config/deployment.yaml
+                        git -C gitops-config config user.email "jenkins@gitops.com"
+                        git -C gitops-config config user.name "Jenkins"
+                        git -C gitops-config add deployment.yaml
+                        git -C gitops-config commit -m "Update image tag to ${IMAGE_TAG}"
+                        git -C gitops-config push
                     """
                 }
             }
         }
-
     }
 }
