@@ -46,12 +46,15 @@ pipeline {
                     passwordVariable: 'GIT_PASS'
                 )]) {
                     sh """
+                        rm -rf gitops-config
                         git clone https://${GIT_USER}:${GIT_PASS}@github.com/SeniorKhaled/gitops-config.git
                         cd gitops-config
                         sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|g' deployment.yaml
+                        sed -i 's|image: ${IMAGE_NAME}:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|g' service.yaml
                         git config user.email "jenkins@gitops.com"
                         git config user.name "Jenkins"
                         git add deployment.yaml
+                        git add service.yaml
                         git commit -m "Update image tag to ${IMAGE_TAG}"
                         git push
                     """
